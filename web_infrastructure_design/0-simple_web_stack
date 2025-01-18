@@ -1,0 +1,13 @@
+This is a one server web infrustructure for www.foobar.com:
+
+Explanations on the web infrustructure specifics for www.foobar.com:
+
+1. **DNS:** Maps the domain name www.foobar.com to the server's IP adress (8.8.8.8) using an A record.
+2. **Web Server (Nginx):** Handles HTTP requests and serves static files.
+3. **Application Server:** Processes requests and runs the applicatiko logic.
+4. **Database (MySQL):** Stores data such as user information and website content.
+
+**Issues:**
+1. **SPOF:** If the server fails, the website becomes un available.
+2. **Maintenance Downtime:** Updating the web server or application server causes temporary unavailability.
+3. **Scalability:** The server cannot handle high traffic or load spikes.
