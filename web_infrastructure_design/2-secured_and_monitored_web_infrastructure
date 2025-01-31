@@ -1,0 +1,58 @@
+  +-------------+       +-------------------+      +-------------+
+  | Firewall 1  | --->  | Load Balancer      | ---> | Web Server  |
+  | (External)  |       | (SSL Termination)  |      | (Server 1)  |
+  +-------------+       +-------------------+      +-------------+
+                         |               |             
+                         v               v             
+                    +------------+  +------------+  
+                    | App Server |  | DB Server  |  
+                    | (Server 2) |  | (Server 3) |  
+                    +------------+  +------------+  
+                         |              
+                         v              
+              +-------------------+  
+              |  Monitoring Client |  
+              | (Sumo Logic/Prom)  |  
+              +-------------------+  
+
+Web Infrastructure Design for www.foobar.com
+
+1. Firewalls
+- Purpose: Firewalls are added to control the flow of traffic between different parts of the infrastructure, filtering out malicious requests and providing an additional layer of protection.
+- Firewall 1 (External): Protects the load balancer from external attacks, ensuring only legitimate traffic reaches the application.
+- Firewall 2 (Internal): Protects communication between the web and application servers, ensuring only authorized traffic flows between them.
+- Firewall 3 (Database): Limits access to the database server, ensuring only the application server can query or write data to the database.
+
+2. SSL Certificate and HTTPS Traffic
+- Purpose: Serving traffic over HTTPS ensures that the communication between the users and the server is encrypted, preventing man-in-the-middle attacks.
+
+- SSL Termination at Load Balancer Level: SSL termination at the load balancer offloads the encryption and decryption tasks from the web and app servers, improving performance. However, this may expose traffic between the load balancer and backend servers if not properly secured.
+Solution: Implement end-to-end SSL/TLS encryption from the load balancer to backend servers to maintain security."
+echo
+
+3. Monitoring Clients
+- Purpose: Monitoring tools track the health, performance, and security of your infrastructure. These tools collect data such as CPU usage, response times, error rates, and request counts.
+- How Monitoring Works: The monitoring clients (deployed on each server) gather real-time metrics such as CPU load, memory usage, disk I/O, and log files. These metrics are sent to a centralized monitoring service (e.g., Sumo Logic or Prometheus) for visualization and alerting."
+- Monitoring QPS (Queries Per Second): To monitor QPS, you would track HTTP requests to the web server or database server. This data can be visualized on dashboards, and alerts can be set when traffic exceeds normal thresholds.
+echo
+
+4. Issues with This Infrastructure
+echo
+
+SSL Termination at Load Balancer Level
+- Issue: If SSL termination is done at the load balancer, traffic between the load balancer and backend servers may be unencrypted. This creates a potential vulnerability, as attackers on the internal network could intercept sensitive data.
+
+- Solution: Implement end-to-end SSL/TLS encryption between the load balancer and backend servers to maintain security.
+echo
+
+Only One MySQL Server Accepting Writes
+- Issue: Having a single MySQL server capable of handling write operations creates a bottleneck and a single point of failure. If this server goes down, the whole application may stop functioning.
+
+- Solution: Use MySQL replication with a master-slave configuration or consider a multi-master setup to ensure high availability and fault tolerance.
+echo
+
+Servers with All the Same Components (Database, Web Server, Application Server)
+
+- Issue: Hosting all components (web, application, and database) on the same server could create performance issues, especially as the system scales. If one component experiences a spike in load (e.g., a database query), it could affect the performance of the entire server.
+
+- Solution: Separate the concerns. Keep the web, application, and database servers on separate machines to improve scalability and fault isolation. Consider using containerization (e.g., Docker, Kubernetes) or microservices for bette
