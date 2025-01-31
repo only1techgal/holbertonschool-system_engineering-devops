@@ -1,0 +1,65 @@
++--------------------+
+|   Internet         |
+|   (Clients)        |
++--------------------+
+         |
+         |
++---------------------------+
+|       HAproxy Load        | <--- Load Balancer (HAproxy) Cluster
+|      Balancer (Cluster)   |
++---------------------------+
+     /         |        \
+    /          |         \
++---------+  +---------+  +---------+
+| Web     |  | App     |  | Database|
+| Server  |  | Server  |  | Server  |
++---------+  +---------+  +---------+
+
+# Web Infrastructure Design for www.foobar.com
+
+This infrastructure is designed to host the website www.foobar.com with scalability, performance, fault tolerance, and security in mind.
+
+## Infrastructure Components
+
+1. Server (1)
+   - Purpose: Dedicated server for a specific role (Web, Application, or Database).
+   - Justification: Splitting components into separate servers optimizes resources and improves fault isolation. If one server fails, others remain operational.
+
+2. Load Balancer (HAproxy) Cluster
+   - Purpose: Distributes incoming traffic among multiple backend servers.
+   - Justification: Load balancing prevents server overload and improves availability. HAproxy cluster ensures high availability in case of a failure.
+
+3. Web Server
+   - Purpose: Handles HTTP requests and serves static content (HTML, CSS, JS, images).
+   - Justification: Offloads static content processing from the application server, optimizing performance.
+
+4. Application Server
+   - Purpose: Handles dynamic content, business logic, and database interactions.
+   - Justification: Isolating the application logic improves resource utilization and fault tolerance, ensuring the web server and database layers are unaffected by application issues.
+
+5. Database Server
+   - Purpose: Stores and manages persistent data and handles database queries.
+   - Justification: Separating the database onto its own server ensures better data management and security, without impacting performance of the web or application servers.
+
+## Explanation of Infrastructure Design
+
+### 1. Server (1)
+Each server is dedicated to a function:
+  - Web Server: Handles static content.
+  - Application Server: Handles dynamic content and business logic.
+  - Database Server: Manages data storage.
+This separation reduces bottlenecks and improves scalability.
+
+### 2. Load Balancer (HAproxy) Cluster
+HAproxy distributes traffic to backend servers, improving redundancy and scalability.
+  - Justification: Load balancing prevents bottlenecks and ensures traffic is spread efficiently. The HAproxy cluster ensures traffic is handled even if one node fails.
+
+### 3. Split Components (Web, Application, Database)
+Splitting components allows independent scaling, where each server layer can grow or shrink as needed.
+  - Justification: This structure enhances resource optimization and ensures better fault tolerance.
+
+## Summary of the Design
+1. Server (1): Dedicated to Web, Application, and Database roles.
+2. HAproxy Cluster: Load balancer for traffic distribution and high availability.
+3. Split Components: Optimized server layers for scalability and fault tolerance.
+This infrastructure is designed for high availability, scalability, and efficient traffic distribution.
